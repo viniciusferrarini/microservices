@@ -25,6 +25,36 @@ services:
         depends_on:
             - config
 
+    gateway:
+        container_name: gateway
+        image: viniciusferrarini/gateway:1.0
+        restart: always
+        environment:
+            CONFIG_SERVER_URL: 'http://config:8888'
+            EUREKA_URL: 'http://discovery:8761/eureka/'
+        ports:
+            - 8080:8080
+        expose:
+            - "8080"
+        depends_on:
+            - config
+            - discovery
+
+    produtos:
+        container_name: produtos
+        image: viniciusferrarini/produtos:1.0
+        restart: always
+        environment:
+            CONFIG_SERVER_URL: 'http://config:8888'
+            EUREKA_URL: 'http://discovery:8761/eureka/'
+            JMS_URL: 'tcp://jms:61616'
+        ports:
+            - 8081:8081
+        depends_on:
+            - config
+            - discovery
+            - jms
+
     jms:
         container_name: jms
         image: rmohr/activemq
