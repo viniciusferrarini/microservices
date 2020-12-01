@@ -1,0 +1,18 @@
+package br.com.softfocus.cupons.api;
+
+import br.com.softfocus.cupons.exception.CupomNotFoundException;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+public class ExceptionAdviceConfiguration {
+
+    @ResponseBody
+    @ExceptionHandler(CupomNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public String noResultExceptionHandler(CupomNotFoundException e) {
+        return e.getMessage();
+    }
+
+}
