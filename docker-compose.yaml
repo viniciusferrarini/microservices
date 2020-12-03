@@ -67,6 +67,23 @@ services:
             - jms
             - prometheus
 
+    cupons:
+        container_name: cupons
+        image: viniciusferrarini/cupons:1.0
+        restart: always
+        environment:
+            CONFIG_SERVER_URL: 'http://config:8888'
+            EUREKA_URL: 'http://discovery:8761/eureka/'
+            JMS_URL: 'tcp://jms:61616'
+            ZIPKIN_URL: 'http://trace:9411/'
+            REDIS_HOST: 'redis'
+        ports:
+            - 8083:8083
+        depends_on:
+            - config
+            - discovery
+            - prometheus
+
     vendas:
         container_name: vendas
         image: viniciusferrarini/vendas:1.0
@@ -144,3 +161,81 @@ services:
             - 3000
         ports:
             - 3000:3000
+
+    logspout:
+        image: gliderlabs/logspout:v3
+        command: 'udp://logstash:5000'
+        links:
+            - logstash
+        volumes:
+            - '/var/run/docker.sock:/tmp/docker.sock'
+        depends_on:
+            - elasticsearch
+            - logstash
+            - kibana
+
+    logstash:
+        image: logstash:2.1.1
+        environment:
+            - STDOUT=true
+        links:
+            - elasticsearch
+        depends_on:
+            - elasticsearch
+            - kibana
+        command: 'logstash -e "input { udp { port => 5000 } } output { elasticsearch { hosts => elasticsearch } }"'
+
+    kibana:
+        image: kibana:4.1.2
+        links:
+            - elasticsearch
+        environment:
+            - ELASTICSEARCH_URL=http://elasticsearch:9200
+        ports:
+            - 5601:5601
+        depends_on:
+            - elasticsearch
+
+    elasticsearch:
+        image: elasticsearch:1.5.2
+        ports:
+            - 9200:9200
+            - 9300:9300
+
+    postgres:
+        image: postgres
+        environment:
+            POSTGRES_DB: keycloak
+            POSTGRES_USER: keycloak
+            POSTGRES_PASSWORD: password
+        ports:
+            - 5431:5432
+        expose:
+            - 5431
+
+    keycloak:
+        image: jboss/keycloak:11.0.0
+        container_name: keycloak
+        restart: on-failure
+        volumes:
+            - ./realm-export.json:/tmp/keycloak/config/realm-export.json
+        environment:
+            DB_VENDOR: POSTGRES
+            DB_ADDR: postgres
+            DB_DATABASE: keycloak
+            DB_USER: keycloak
+            DB_SCHEMA: public
+            DB_PASSWORD: password
+            KEYCLOAK_USER: admin
+            KEYCLOAK_PASSWORD: admin
+            KEYCLOAK_IMPORT: /tmp/keycloak/config/realm-export.json
+        command:
+            - "-b"
+            - "0.0.0.0"
+            - "-Djboss.socket.binding.port-offset=10000"
+        expose:
+            - 18080
+        ports:
+            - 18080:18080
+        depends_on:
+            - postgres

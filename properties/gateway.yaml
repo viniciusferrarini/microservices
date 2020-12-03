@@ -11,12 +11,41 @@ eureka:
         registry-fetch-interval-seconds: 1
 
 
+keycloak-client:
+    server-url: http://localhost:18080/auth
+    realm: spring-micro-main
+
 spring:
     application:
         name: gateway
     cloud:
         gateway:
+            default-filters:
+                - TokenRelay
+                - RemoveRequestHeader=Cookie
             discovery:
                 locator:
                     enabled: true
                     lower-case-service-id: true
+    security:
+        oauth2:
+            resourceserver:
+                jwt:
+                    jwk-set-uri: ${keycloak-client.server-url}/realms/${keycloak-client.realm}/protocol/openid-connect/certs
+            client:
+                provider:
+                    keycloak:
+                        token-uri: ${keycloak-client.server-url}/realms/${keycloak-client.realm}/protocol/openid-connect/token
+                        authorization-uri: ${keycloak-client.server-url}/realms/${keycloak-client.realm}/protocol/openid-connect/auth
+                        userinfo-uri: ${keycloak-client.server-url}/realms/${keycloak-client.realm}/protocol/openid-connect/userinfo
+                        jwk-set-uri: ${keycloak-client.server-url}/realms/${keycloak-client.realm}/protocol/openid-connect/certs
+                        user-name-attribute: preferred_username
+                        user-info-authentication-method: header
+                registration:
+                    keycloak:
+                        provider: keycloak
+                        client-id: spring-micro-gateway
+                        client-secret: a139d970-5ba8-4ac8-9928-4440c9a4a796
+                        authorization-grant-type: authorization_code
+                        redirect-uri: http://localhost:8080/login/oauth2/code/keycloak
+                        scope: openid
