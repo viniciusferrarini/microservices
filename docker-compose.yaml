@@ -103,20 +103,20 @@ services:
             - jms
             - prometheus
 
-    gateway:
-        container_name: gateway
-        image: viniciusferrarini/gateway:1.0
-        restart: always
-        environment:
-            CONFIG_SERVER_URL: 'http://config:8888'
-            EUREKA_URL: 'http://discovery:8761/eureka/'
-        ports:
-            - 8080:8080
-        expose:
-            - 8080
-        depends_on:
-            - config
-            - discovery
+#    gateway:
+#        container_name: gateway
+#        image: viniciusferrarini/gateway:1.0
+#        restart: always
+#        environment:
+#            CONFIG_SERVER_URL: 'http://config:8888'
+#            EUREKA_URL: 'http://discovery:8761/eureka/'
+#        ports:
+#            - 8080:8080
+#        expose:
+#            - 8080
+#        depends_on:
+#            - config
+#            - discovery
 
     jms:
         container_name: jms
@@ -162,45 +162,45 @@ services:
         ports:
             - 3000:3000
 
-    logspout:
-        image: gliderlabs/logspout:v3
-        command: 'udp://logstash:5000'
-        links:
-            - logstash
-        volumes:
-            - '/var/run/docker.sock:/tmp/docker.sock'
-        depends_on:
-            - elasticsearch
-            - logstash
-            - kibana
+#    logspout:
+#        image: gliderlabs/logspout:v3
+#        command: 'udp://logstash:5000'
+#        links:
+#            - logstash
+#        volumes:
+#            - '/var/run/docker.sock:/tmp/docker.sock'
+#        depends_on:
+#            - elasticsearch
+#            - logstash
+#            - kibana
+#
+#    logstash:
+#        image: logstash:2.1.1
+#        environment:
+#            - STDOUT=true
+#        links:
+#            - elasticsearch
+#        depends_on:
+#            - elasticsearch
+#            - kibana
+#        command: 'logstash -e "input { udp { port => 5000 } } output { elasticsearch { hosts => elasticsearch } }"'
+#
+#    kibana:
+#        image: kibana:4.1.2
+#        links:
+#            - elasticsearch
+#        environment:
+#            - ELASTICSEARCH_URL=http://elasticsearch:9200
+#        ports:
+#            - 5601:5601
+#        depends_on:
+#            - elasticsearch
 
-    logstash:
-        image: logstash:2.1.1
-        environment:
-            - STDOUT=true
-        links:
-            - elasticsearch
-        depends_on:
-            - elasticsearch
-            - kibana
-        command: 'logstash -e "input { udp { port => 5000 } } output { elasticsearch { hosts => elasticsearch } }"'
-
-    kibana:
-        image: kibana:4.1.2
-        links:
-            - elasticsearch
-        environment:
-            - ELASTICSEARCH_URL=http://elasticsearch:9200
-        ports:
-            - 5601:5601
-        depends_on:
-            - elasticsearch
-
-    elasticsearch:
-        image: elasticsearch:1.5.2
-        ports:
-            - 9200:9200
-            - 9300:9300
+#    elasticsearch:
+#        image: elasticsearch:1.5.2
+#        ports:
+#            - 9200:9200
+#            - 9300:9300
 
     postgres:
         image: postgres
