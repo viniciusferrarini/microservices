@@ -65,6 +65,26 @@ services:
             - config
             - discovery
             - jms
+            - prometheus
+
+    vendas:
+        container_name: vendas
+        image: viniciusferrarini/vendas:1.0
+        restart: always
+        environment:
+            CONFIG_SERVER_URL: 'http://config:8888'
+            EUREKA_URL: 'http://discovery:8761/eureka/'
+            JMS_URL: 'tcp://jms:61616'
+            ZIPKIN_URL: 'http://trace:9411/'
+            MYSQL_HOST: 'mysql'
+            MYSQL_PORT: 3306
+        ports:
+            - 8082:8082
+        depends_on:
+            - config
+            - discovery
+            - jms
+            - prometheus
 
     gateway:
         container_name: gateway
