@@ -38,7 +38,7 @@ public class VendaPersistDtoConverter {
             }
         }
 
-        BigDecimal desconto =  BigDecimal.ZERO;
+        BigDecimal desconto = BigDecimal.ZERO;
         if (dto.getCupom().isPresent()) {
             desconto = cupomService.getDescontoByCupom(dto.getCupom().get());
         }
