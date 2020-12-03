@@ -42,7 +42,7 @@ public class ProdutoApi {
     }
 
     @DeleteMapping("{id}")
-    public void delete(@PathVariable("id") Long id) {
+    public void delete(@PathVariable(value = "id") Long id) {
         repository.deleteById(id);
     }
 
