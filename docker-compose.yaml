@@ -28,7 +28,7 @@ services:
 
     config:
         container_name: config
-        image: viniciusferrarini/config:1.0
+        image: viniciusferrarini/config:1.1
         restart: always
         environment:
             URI: 'https://github.com/viniciusferrarini/microservices.git'
@@ -39,7 +39,7 @@ services:
 
     discovery:
         container_name: discovery
-        image: viniciusferrarini/discovery:1.0
+        image: viniciusferrarini/discovery:1.1
         restart: always
         environment:
             CONFIG_SERVER_URL: 'http://config:8888'
@@ -52,7 +52,7 @@ services:
 
     produtos:
         container_name: produtos
-        image: viniciusferrarini/produtos:1.1
+        image: viniciusferrarini/produtos:1.2
         restart: always
         environment:
             CONFIG_SERVER_URL: 'http://config:8888'
@@ -69,7 +69,7 @@ services:
 
     cupons:
         container_name: cupons
-        image: viniciusferrarini/cupons:1.1
+        image: viniciusferrarini/cupons:1.2
         restart: always
         environment:
             CONFIG_SERVER_URL: 'http://config:8888'
@@ -86,7 +86,7 @@ services:
 
     vendas:
         container_name: vendas
-        image: viniciusferrarini/vendas:1.1
+        image: viniciusferrarini/vendas:1.2
         restart: always
         environment:
             CONFIG_SERVER_URL: 'http://config:8888'
@@ -105,7 +105,7 @@ services:
 
     gateway:
         container_name: gateway
-        image: viniciusferrarini/gateway:1.0
+        image: viniciusferrarini/gateway:1.2
         restart: always
         environment:
             CONFIG_SERVER_URL: 'http://config:8888'
