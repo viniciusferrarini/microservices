@@ -28,7 +28,7 @@ services:
 
     config:
         container_name: config
-        image: viniciusferrarini/config:2.0
+        image: viniciusferrarini/config:1.0
         restart: always
         environment:
             URI: 'https://github.com/viniciusferrarini/microservices.git'
@@ -39,7 +39,7 @@ services:
 
     discovery:
         container_name: discovery
-        image: viniciusferrarini/discovery:2.0
+        image: viniciusferrarini/discovery:1.0
         restart: always
         environment:
             CONFIG_SERVER_URL: 'http://config:8888'
@@ -52,7 +52,7 @@ services:
 
     produtos:
         container_name: produtos
-        image: viniciusferrarini/produtos:2.1
+        image: viniciusferrarini/produtos:1.0
         restart: always
         environment:
             CONFIG_SERVER_URL: 'http://config:8888'
@@ -103,20 +103,20 @@ services:
             - jms
             - prometheus
 
-#    gateway:
-#        container_name: gateway
-#        image: viniciusferrarini/gateway:1.0
-#        restart: always
-#        environment:
-#            CONFIG_SERVER_URL: 'http://config:8888'
-#            EUREKA_URL: 'http://discovery:8761/eureka/'
-#        ports:
-#            - 8080:8080
-#        expose:
-#            - 8080
-#        depends_on:
-#            - config
-#            - discovery
+    gateway:
+        container_name: gateway
+        image: viniciusferrarini/gateway:1.0
+        restart: always
+        environment:
+            CONFIG_SERVER_URL: 'http://config:8888'
+            EUREKA_URL: 'http://discovery:8761/eureka/'
+        ports:
+            - 8080:8080
+        expose:
+            - 8080
+        depends_on:
+            - config
+            - discovery
 
     jms:
         container_name: jms
@@ -204,6 +204,8 @@ services:
 
     postgres:
         image: postgres
+        volumes:
+            - postgres_data:/var/lib/postgresql/data
         environment:
             POSTGRES_DB: keycloak
             POSTGRES_USER: keycloak
@@ -239,3 +241,7 @@ services:
             - 18080:18080
         depends_on:
             - postgres
+
+volumes:
+    postgres_data:
+        driver: local

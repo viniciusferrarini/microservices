@@ -1,6 +1,6 @@
 {
-    "id": "spring-micro-main",
-    "realm": "spring-micro-main",
+    "id": "microservices",
+    "realm": "microservices",
     "notBefore": 0,
     "revokeRefreshToken": false,
     "refreshTokenMaxReuse": 0,
